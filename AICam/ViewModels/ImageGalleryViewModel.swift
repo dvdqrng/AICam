@@ -74,9 +74,22 @@ class ImageGalleryViewModel: ObservableObject {
                     self?.errorMessage = "Failed to load images: \(error.localizedDescription)"
                 }
             }, receiveValue: { [weak self] images in
-                self?.images = images
-                self?.canLoadMore = images.count == self?.pageSize
-                self?.currentOffset += images.count
+                guard let self = self else { return }
+                
+                print("Loaded \(images.count) images")
+                for (index, image) in images.enumerated() {
+                    print("Image \(index): ID=\(image.id), URL=\(image.imageUrl)")
+                }
+                
+                // Make sure we have unique images
+                let uniqueImages = Array(Dictionary(grouping: images) { $0.id }.values.map { $0.first! })
+                if uniqueImages.count != images.count {
+                    print("WARNING: Received \(images.count) images but only \(uniqueImages.count) are unique")
+                }
+                
+                self.images = uniqueImages
+                self.canLoadMore = images.count == self.pageSize
+                self.currentOffset += images.count
             })
             .store(in: &cancellables)
     }
@@ -109,7 +122,11 @@ class ImageGalleryViewModel: ObservableObject {
             }, receiveValue: { [weak self] newImages in
                 guard let self = self else { return }
                 
-                self.images.append(contentsOf: newImages)
+                // Filter out duplicates based on image ID
+                let existingIds = Set(self.images.map { $0.id })
+                let uniqueNewImages = newImages.filter { !existingIds.contains($0.id) }
+                
+                self.images.append(contentsOf: uniqueNewImages)
                 self.canLoadMore = newImages.count == self.pageSize
                 self.currentOffset += newImages.count
             })

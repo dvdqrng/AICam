@@ -60,16 +60,36 @@ struct ImageGalleryView: View {
                 } else {
                     if viewModel.selectedImageIndex < viewModel.images.count {
                         // Display the selected image
-                        if let url = URL(string: viewModel.images[viewModel.selectedImageIndex].imageUrl) {
-                            RemoteImage(url: url)
-                                .aspectRatio(contentMode: .fit)
-                                .transition(.opacity)
-                                .animation(.easeInOut, value: viewModel.selectedImageIndex)
+                        let currentImage = viewModel.images[viewModel.selectedImageIndex]
+                        
+                        // Clean URL: fix double slashes and remove trailing question marks
+                        let cleanUrlString = currentImage.imageUrl
+                            .replacingOccurrences(of: "//storage", with: "/storage")
+                            .trimmingCharacters(in: CharacterSet(charactersIn: "?"))
+                        
+                        if let url = URL(string: cleanUrlString) {
+                            VStack {
+                                Text("Showing image \(currentImage.id) (\(viewModel.selectedImageIndex + 1) of \(viewModel.images.count))")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                    .padding(.bottom, 2)
+                                
+                                RemoteImage(url: url)
+                                    .aspectRatio(contentMode: .fit)
+                                    .transition(.opacity)
+                                    .animation(.easeInOut, value: viewModel.selectedImageIndex)
+                            }
                         } else {
-                            Image(systemName: "photo")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.gray)
+                            VStack {
+                                Text("Invalid URL for image \(currentImage.id)")
+                                    .font(.caption)
+                                    .foregroundColor(.red)
+                                
+                                Image(systemName: "photo")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .foregroundColor(.gray)
+                            }
                         }
                     }
                 }

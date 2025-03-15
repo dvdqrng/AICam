@@ -39,7 +39,15 @@ class ImageLoaderService: ObservableObject {
     /// Convenience initializer with string URL
     /// - Parameter urlString: String URL of the image to load
     convenience init?(urlString: String) {
-        guard let url = URL(string: urlString) else { return nil }
+        // Clean up URL: fix double slashes and remove trailing question marks
+        let cleanUrlString = urlString
+            .replacingOccurrences(of: "//storage", with: "/storage") // Fix double slashes
+            .trimmingCharacters(in: CharacterSet(charactersIn: "?")) // Remove trailing ?
+        
+        print("Original URL: \(urlString)")
+        print("Cleaned URL: \(cleanUrlString)")
+        
+        guard let url = URL(string: cleanUrlString) else { return nil }
         self.init(url: url)
     }
     
@@ -97,7 +105,12 @@ struct RemoteImage: View {
     ///   - urlString: String URL of the image to load
     ///   - placeholder: Placeholder image to show while loading
     init?(urlString: String, placeholder: Image = Image(systemName: "photo")) {
-        guard let url = URL(string: urlString) else { return nil }
+        // Clean up URL: fix double slashes and remove trailing question marks
+        let cleanUrlString = urlString
+            .replacingOccurrences(of: "//storage", with: "/storage") // Fix double slashes
+            .trimmingCharacters(in: CharacterSet(charactersIn: "?")) // Remove trailing ?
+            
+        guard let url = URL(string: cleanUrlString) else { return nil }
         self.init(url: url, placeholder: placeholder)
     }
     

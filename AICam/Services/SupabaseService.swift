@@ -210,6 +210,8 @@ class SupabaseService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.allHTTPHeaderFields = headers
+        // Add a header to prevent duplicates in the response
+        request.addValue("id", forHTTPHeaderField: "Prefer")
         
         return session.dataTaskPublisher(for: request)
             .tryMap { data, response -> Data in
@@ -233,6 +235,24 @@ class SupabaseService {
                 return data
             }
             .decode(type: [ImageModel].self, decoder: configuredDecoder())
+            .map { images -> [ImageModel] in
+                // Fix the URLs to ensure they don't have double slashes or trailing question marks
+                return images.map { image in
+                    let cleanUrl = image.imageUrl
+                        .replacingOccurrences(of: "//storage", with: "/storage")
+                        .trimmingCharacters(in: CharacterSet(charactersIn: "?"))
+                    
+                    // Create a new image model with the clean URL
+                    return ImageModel(
+                        id: image.id,
+                        imageUrl: cleanUrl,
+                        photoDate: image.photoDate,
+                        createdAt: image.createdAt,
+                        userId: image.userId,
+                        metadata: image.metadata
+                    )
+                }
+            }
             .mapError { [weak self] error -> Error in
                 guard let self = self else { 
                     // If self is nil, just return the original error instead of trying to process it

@@ -32,18 +32,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		21AABE6B2D85CDB200D28250 /* AICam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AICam.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		21AABE7F2D85CDB300D28250 /* AICamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AICamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		21AABE892D85CDB300D28250 /* AICamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AICamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		21AABE6B2D85CDB200D28250 /* PiCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PiCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		21AABE7F2D85CDB300D28250 /* PiCamTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PiCamTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		21AABE892D85CDB300D28250 /* PiCamUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PiCamUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		21AABE912D85CDB300D28250 /* Exceptions for "AICam" folder in "AICam" target */ = {
+		21AABE912D85CDB300D28250 /* Exceptions for "AICam" folder in "PiCam" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 21AABE6A2D85CDB200D28250 /* AICam */;
+			target = 21AABE6A2D85CDB200D28250 /* PiCam */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -51,7 +51,7 @@
 		21AABE6D2D85CDB200D28250 /* AICam */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				21AABE912D85CDB300D28250 /* Exceptions for "AICam" folder in "AICam" target */,
+				21AABE912D85CDB300D28250 /* Exceptions for "AICam" folder in "PiCam" target */,
 			);
 			path = AICam;
 			sourceTree = "<group>";
@@ -111,9 +111,9 @@
 		21AABE6C2D85CDB200D28250 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				21AABE6B2D85CDB200D28250 /* AICam.app */,
-				21AABE7F2D85CDB300D28250 /* AICamTests.xctest */,
-				21AABE892D85CDB300D28250 /* AICamUITests.xctest */,
+				21AABE6B2D85CDB200D28250 /* PiCam.app */,
+				21AABE7F2D85CDB300D28250 /* PiCamTests.xctest */,
+				21AABE892D85CDB300D28250 /* PiCamUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -121,9 +121,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		21AABE6A2D85CDB200D28250 /* AICam */ = {
+		21AABE6A2D85CDB200D28250 /* PiCam */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21AABE922D85CDB300D28250 /* Build configuration list for PBXNativeTarget "AICam" */;
+			buildConfigurationList = 21AABE922D85CDB300D28250 /* Build configuration list for PBXNativeTarget "PiCam" */;
 			buildPhases = (
 				21AABE672D85CDB200D28250 /* Sources */,
 				21AABE682D85CDB200D28250 /* Frameworks */,
@@ -136,7 +136,7 @@
 			fileSystemSynchronizedGroups = (
 				21AABE6D2D85CDB200D28250 /* AICam */,
 			);
-			name = AICam;
+			name = PiCam;
 			packageProductDependencies = (
 				21AABEB12D85D64D00D28250 /* Auth */,
 				21AABEB32D85D64D00D28250 /* Functions */,
@@ -145,12 +145,12 @@
 				21AABEB92D85D64D00D28250 /* Storage */,
 			);
 			productName = AICam;
-			productReference = 21AABE6B2D85CDB200D28250 /* AICam.app */;
+			productReference = 21AABE6B2D85CDB200D28250 /* PiCam.app */;
 			productType = "com.apple.product-type.application";
 		};
-		21AABE7E2D85CDB300D28250 /* AICamTests */ = {
+		21AABE7E2D85CDB300D28250 /* PiCamTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21AABE972D85CDB300D28250 /* Build configuration list for PBXNativeTarget "AICamTests" */;
+			buildConfigurationList = 21AABE972D85CDB300D28250 /* Build configuration list for PBXNativeTarget "PiCamTests" */;
 			buildPhases = (
 				21AABE7B2D85CDB300D28250 /* Sources */,
 				21AABE7C2D85CDB300D28250 /* Frameworks */,
@@ -164,16 +164,16 @@
 			fileSystemSynchronizedGroups = (
 				21AABE822D85CDB300D28250 /* AICamTests */,
 			);
-			name = AICamTests;
+			name = PiCamTests;
 			packageProductDependencies = (
 			);
 			productName = AICamTests;
-			productReference = 21AABE7F2D85CDB300D28250 /* AICamTests.xctest */;
+			productReference = 21AABE7F2D85CDB300D28250 /* PiCamTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		21AABE882D85CDB300D28250 /* AICamUITests */ = {
+		21AABE882D85CDB300D28250 /* PiCamUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21AABE9A2D85CDB300D28250 /* Build configuration list for PBXNativeTarget "AICamUITests" */;
+			buildConfigurationList = 21AABE9A2D85CDB300D28250 /* Build configuration list for PBXNativeTarget "PiCamUITests" */;
 			buildPhases = (
 				21AABE852D85CDB300D28250 /* Sources */,
 				21AABE862D85CDB300D28250 /* Frameworks */,
@@ -187,11 +187,11 @@
 			fileSystemSynchronizedGroups = (
 				21AABE8C2D85CDB300D28250 /* AICamUITests */,
 			);
-			name = AICamUITests;
+			name = PiCamUITests;
 			packageProductDependencies = (
 			);
 			productName = AICamUITests;
-			productReference = 21AABE892D85CDB300D28250 /* AICamUITests.xctest */;
+			productReference = 21AABE892D85CDB300D28250 /* PiCamUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -217,7 +217,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 21AABE662D85CDB200D28250 /* Build configuration list for PBXProject "AICam" */;
+			buildConfigurationList = 21AABE662D85CDB200D28250 /* Build configuration list for PBXProject "PiCam" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -234,9 +234,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				21AABE6A2D85CDB200D28250 /* AICam */,
-				21AABE7E2D85CDB300D28250 /* AICamTests */,
-				21AABE882D85CDB300D28250 /* AICamUITests */,
+				21AABE6A2D85CDB200D28250 /* PiCam */,
+				21AABE7E2D85CDB300D28250 /* PiCamTests */,
+				21AABE882D85CDB300D28250 /* PiCamUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -292,12 +292,12 @@
 /* Begin PBXTargetDependency section */
 		21AABE812D85CDB300D28250 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 21AABE6A2D85CDB200D28250 /* AICam */;
+			target = 21AABE6A2D85CDB200D28250 /* PiCam */;
 			targetProxy = 21AABE802D85CDB300D28250 /* PBXContainerItemProxy */;
 		};
 		21AABE8B2D85CDB300D28250 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 21AABE6A2D85CDB200D28250 /* AICam */;
+			target = 21AABE6A2D85CDB200D28250 /* PiCam */;
 			targetProxy = 21AABE8A2D85CDB300D28250 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -515,7 +515,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AICam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AICam";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PiCam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PiCam";
 			};
 			name = Debug;
 		};
@@ -534,7 +534,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AICam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AICam";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PiCam.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/PiCam";
 			};
 			name = Release;
 		};
@@ -575,7 +575,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		21AABE662D85CDB200D28250 /* Build configuration list for PBXProject "AICam" */ = {
+		21AABE662D85CDB200D28250 /* Build configuration list for PBXProject "PiCam" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21AABE952D85CDB300D28250 /* Debug */,
@@ -584,7 +584,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		21AABE922D85CDB300D28250 /* Build configuration list for PBXNativeTarget "AICam" */ = {
+		21AABE922D85CDB300D28250 /* Build configuration list for PBXNativeTarget "PiCam" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21AABE932D85CDB300D28250 /* Debug */,
@@ -593,7 +593,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		21AABE972D85CDB300D28250 /* Build configuration list for PBXNativeTarget "AICamTests" */ = {
+		21AABE972D85CDB300D28250 /* Build configuration list for PBXNativeTarget "PiCamTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21AABE982D85CDB300D28250 /* Debug */,
@@ -602,7 +602,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		21AABE9A2D85CDB300D28250 /* Build configuration list for PBXNativeTarget "AICamUITests" */ = {
+		21AABE9A2D85CDB300D28250 /* Build configuration list for PBXNativeTarget "PiCamUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21AABE9B2D85CDB300D28250 /* Debug */,

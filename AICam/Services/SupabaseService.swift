@@ -24,9 +24,9 @@ class SupabaseService {
     
     /// Private initializer for singleton pattern
     private init() {
-        // TODO: Move these to environment variables or secure storage
-        self.supabaseUrl = "YOUR_SUPABASE_URL"
-        self.supabaseKey = "YOUR_SUPABASE_API_KEY"
+        // Supabase credentials from configuration
+        self.supabaseUrl = "https://bidgqmzbwzoeifenmixm.supabase.co"
+        self.supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpZGdxbXpid3pvZWlmZW5taXhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwMzc1NzUsImV4cCI6MjA1NzYxMzU3NX0.1xXs_3JX9AiEYbxZT3y_1lURONv6AEyKqls_XmLLyV0"
         
         let configuration = URLSessionConfiguration.default
         configuration.httpAdditionalHeaders = [

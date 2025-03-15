@@ -13,6 +13,7 @@ struct AICamApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
+            ImageModel.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -25,7 +26,9 @@ struct AICamApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationView {
+                ImageGalleryView()
+            }
         }
         .modelContainer(sharedModelContainer)
     }

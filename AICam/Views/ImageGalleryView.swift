@@ -11,6 +11,9 @@ struct ImageGalleryView: View {
     /// View model for the gallery
     @StateObject private var viewModel = ImageGalleryViewModel()
     
+    /// State for showing the camera view
+    @State private var showingCameraView = false
+    
     var body: some View {
         VStack {
             // Title with date
@@ -128,6 +131,33 @@ struct ImageGalleryView: View {
             }
         }
         .navigationTitle("My Images")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    showingCameraView = true
+                }) {
+                    Image(systemName: "camera")
+                        .font(.title2)
+                }
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    viewModel.loadImages()
+                }) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.title2)
+                }
+                .disabled(viewModel.isLoading)
+            }
+        }
+        .sheet(isPresented: $showingCameraView) {
+            CameraView()
+                .onDisappear {
+                    // Refresh the image list when camera view is dismissed
+                    viewModel.loadImages()
+                }
+        }
         .onAppear {
             // Load images when the view appears
             if viewModel.images.isEmpty {

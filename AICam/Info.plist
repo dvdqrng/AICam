@@ -6,5 +6,9 @@
 	<array>
 		<string>remote-notification</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>AICam needs access to your camera to take photos and upload them to your gallery.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>AICam needs access to your photo library to save and access your photos.</string>
 </dict>
 </plist>

@@ -11,6 +11,9 @@ struct ImageGalleryView: View {
     /// View model for the gallery
     @StateObject private var viewModel = ImageGalleryViewModel()
     
+    /// Authentication service
+    @EnvironmentObject private var authService: AuthService
+    
     var body: some View {
         VStack {
             // Title with date
@@ -138,6 +141,14 @@ struct ImageGalleryView: View {
                 }
                 .disabled(viewModel.isLoading)
             }
+            
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    authService.signOut()
+                }) {
+                    Text("Sign Out")
+                }
+            }
         }
         .onAppear {
             // Load images when the view appears
@@ -151,5 +162,6 @@ struct ImageGalleryView: View {
 #Preview {
     NavigationView {
         ImageGalleryView()
+            .environmentObject(AuthService.shared)
     }
 } 

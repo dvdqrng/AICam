@@ -10,10 +10,13 @@ import SwiftData
 
 @main
 struct AICamApp: App {
+    @StateObject private var authService = AuthService.shared
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
             ImageModel.self,
+            UserModel.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -26,8 +29,16 @@ struct AICamApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                ImageGalleryView()
+            if authService.currentUser != nil {
+                // User is logged in, show the main app
+                NavigationView {
+                    ImageGalleryView()
+                }
+                .environmentObject(authService)
+            } else {
+                // User is not logged in, show login screen
+                LoginView()
+                    .environmentObject(authService)
             }
         }
         .modelContainer(sharedModelContainer)

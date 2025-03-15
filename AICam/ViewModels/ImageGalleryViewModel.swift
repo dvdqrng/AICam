@@ -37,22 +37,35 @@ class ImageGalleryViewModel: ObservableObject {
     /// Service for interacting with Supabase
     private let supabaseService: SupabaseService
     
+    /// Authentication service for getting current user
+    private let authService: AuthService
+    
     /// Initializes the view model with dependencies
-    /// - Parameter supabaseService: The service for accessing Supabase
-    init(supabaseService: SupabaseService = SupabaseService.shared) {
+    /// - Parameters:
+    ///   - supabaseService: The service for accessing Supabase
+    ///   - authService: The authentication service
+    init(supabaseService: SupabaseService = SupabaseService.shared,
+         authService: AuthService = AuthService.shared) {
         self.supabaseService = supabaseService
+        self.authService = authService
     }
     
-    /// Loads images from Supabase
+    /// Loads images from Supabase for the current user
     func loadImages() {
         guard !isLoading else { return }
+        
+        // Get current user's ID
+        guard let userId = authService.currentUser?.id else {
+            errorMessage = "User not logged in"
+            return
+        }
         
         isLoading = true
         errorMessage = nil
         currentOffset = 0
         canLoadMore = true
         
-        supabaseService.fetchImages(startIndex: currentOffset, limit: pageSize)
+        supabaseService.fetchImages(startIndex: currentOffset, limit: pageSize, userId: userId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
@@ -81,10 +94,11 @@ class ImageGalleryViewModel: ObservableObject {
     /// Loads the next page of images
     private func loadMoreImages() {
         guard !isLoading, canLoadMore else { return }
+        guard let userId = authService.currentUser?.id else { return }
         
         isLoading = true
         
-        supabaseService.fetchImages(startIndex: currentOffset, limit: pageSize)
+        supabaseService.fetchImages(startIndex: currentOffset, limit: pageSize, userId: userId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
@@ -112,10 +126,7 @@ class ImageGalleryViewModel: ObservableObject {
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .short
         
-        if let date = images[index].photoDate ?? images[index].createdAt {
-            return dateFormatter.string(from: date)
-        }
-        
-        return "No date available"
+        let displayDate = images[index].photoDate ?? images[index].createdAt
+        return dateFormatter.string(from: displayDate)
     }
 } 

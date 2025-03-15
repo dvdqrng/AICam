@@ -2,13 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>AICam needs access to your camera to take photos and upload them to your gallery.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>AICam needs access to your photo library to save and access your photos.</string>
 </dict>
 </plist>

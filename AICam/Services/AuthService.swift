@@ -8,7 +8,6 @@
 import Foundation
 import AuthenticationServices
 import Combine
-import SwiftData
 
 /// Service for handling user authentication
 class AuthService: NSObject, ObservableObject {
@@ -97,7 +96,7 @@ class AuthService: NSObject, ObservableObject {
                 
                 if let user = existingUser {
                     // User exists, update and use it
-                    var updatedUser = user
+                    let updatedUser = user
                     // Only update email and name if they are new
                     if user.email == nil, let email = email {
                         updatedUser.email = email
@@ -195,20 +194,40 @@ extension AuthService: ASAuthorizationControllerPresentationContextProviding {
     /// - Parameter controller: The authorization controller
     /// - Returns: The presentation window
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
-        return window ?? UIWindow()
+        // Get the key window using the newer API
+        if #available(iOS 15.0, *) {
+            guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                  let window = scene.windows.first else {
+                return UIWindow()
+            }
+            return window
+        } else {
+            // Fallback for older iOS
+            let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+            return window ?? UIWindow()
+        }
     }
 }
 
 /// Response model for user data from Supabase
 struct UserResponse: Codable {
     let id: String
-    let apple_id: String
+    let appleId: String
     let email: String?
     let name: String?
-    let avatar_url: String?
-    let created_at: String
-    let last_login: String
+    let avatarUrl: String?
+    let createdAt: String
+    let lastLogin: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case appleId = "apple_id"
+        case email
+        case name
+        case avatarUrl = "avatar_url"
+        case createdAt = "created_at"
+        case lastLogin = "last_login"
+    }
 }
 
 /// Codable version of UserModel for UserDefaults storage

@@ -7,20 +7,34 @@
 
 import Foundation
 import Combine
-import Supabase
 
 /// Service responsible for handling all Supabase API interactions
 class SupabaseService {
     /// Singleton instance of the service
     static let shared = SupabaseService()
     
-    /// Supabase client
-    private let supabase: SupabaseClient
+    /// Supabase API URL
+    private let supabaseUrl: String
+    
+    /// Supabase API Key
+    private let supabaseKey: String
+    
+    /// URL session for network requests
+    private let session: URLSession
     
     /// Private initializer for singleton pattern
     private init() {
-        // Initialize Supabase client from configuration
-        self.supabase = SupabaseConfig.createClient()
+        // Supabase credentials from configuration
+        self.supabaseUrl = "https://bidgqmzbwzoeifenmixm.supabase.co"
+        self.supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpZGdxbXpid3pvZWlmZW5taXhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwMzc1NzUsImV4cCI6MjA1NzYxMzU3NX0.1xXs_3JX9AiEYbxZT3y_1lURONv6AEyKqls_XmLLyV0"
+        
+        let configuration = URLSessionConfiguration.default
+        configuration.httpAdditionalHeaders = [
+            "apikey": supabaseKey,
+            "Authorization": "Bearer \(supabaseKey)",
+            "Content-Type": "application/json"
+        ]
+        self.session = URLSession(configuration: configuration)
     }
     
     /// Fetches images from Supabase
@@ -31,46 +45,41 @@ class SupabaseService {
     func fetchImages(page: Int = 1, pageSize: Int = 10) -> AnyPublisher<[ImageModel], Error> {
         let offset = (page - 1) * pageSize
         
-        // Create a Future publisher that wraps the async Supabase query
-        return Future<[ImageModel], Error> { promise in
-            // Use async/await with Task since Supabase SDK uses async/await
-            Task {
-                do {
-                    // Query the images table with pagination
-                    let response: [SupabaseImageResponse] = try await self.supabase.database
-                        .from("images")
-                        .select()
-                        .order("photo_date", ascending: false)
-                        .range(offset, offset + pageSize - 1)
-                        .execute()
-                        .value
-                    
-                    // Convert the response to ImageModel objects
-                    let imageModels = response.compactMap { response -> ImageModel? in
-                        guard let photoDateString = response.photo_date,
-                              let createdAtString = response.created_at,
-                              let photoDate = ISO8601DateFormatter().date(from: photoDateString),
-                              let createdAt = ISO8601DateFormatter().date(from: createdAtString) else {
-                            return nil
-                        }
-                        
-                        return ImageModel(
-                            id: response.id,
-                            imageUrl: response.url,
-                            photoDate: photoDate,
-                            createdAt: createdAt,
-                            metadata: response.metadata
-                        )
+        // Construct the API URL with pagination
+        guard let url = URL(string: "\(supabaseUrl)/rest/v1/images?select=*&order=photo_date.desc&offset=\(offset)&limit=\(pageSize)") else {
+            return Fail(error: NSError(domain: "SupabaseService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"]))
+                .eraseToAnyPublisher()
+        }
+        
+        // Create the request
+        return session.dataTaskPublisher(for: url)
+            .tryMap { data, response -> Data in
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200...299).contains(httpResponse.statusCode) else {
+                    throw NSError(domain: "SupabaseService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Server error"])
+                }
+                return data
+            }
+            .decode(type: [SupabaseImageResponse].self, decoder: JSONDecoder())
+            .map { responses -> [ImageModel] in
+                return responses.compactMap { response in
+                    guard let photoDateString = response.photo_date,
+                          let createdAtString = response.created_at,
+                          let photoDate = ISO8601DateFormatter().date(from: photoDateString),
+                          let createdAt = ISO8601DateFormatter().date(from: createdAtString) else {
+                        return nil
                     }
                     
-                    // Fulfill the promise with the image models
-                    promise(.success(imageModels))
-                } catch {
-                    // Handle any errors
-                    promise(.failure(error))
+                    return ImageModel(
+                        id: response.id,
+                        imageUrl: response.url,
+                        photoDate: photoDate,
+                        createdAt: createdAt,
+                        metadata: response.metadata
+                    )
                 }
             }
-        }.eraseToAnyPublisher()
+            .eraseToAnyPublisher()
     }
 }
 

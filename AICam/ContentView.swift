@@ -6,56 +6,50 @@
 //
 
 import SwiftUI
-import SwiftData
+import UIKit
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
+    @EnvironmentObject var authService: AuthService
+    
     var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
+        Group {
+            if authService.currentUser != nil {
+                // Show main app content
+                ImageGalleryView()
+                    .transition(.opacity)
+            } else {
+                // Show login screen
+                LoginView()
+                    .transition(.opacity)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
         }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+        .animation(.default, value: authService.currentUser != nil)
+        // Add a debug button for network troubleshooting (optional)
+        .overlay(alignment: .bottomTrailing) {
+            #if DEBUG
+            Button(action: {
+                let networkDebugView = UIHostingController(rootView: NetworkDebugView())
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let rootViewController = windowScene.windows.first?.rootViewController {
+                    rootViewController.present(networkDebugView, animated: true)
+                }
+            }) {
+                HStack {
+                    Image(systemName: "network")
+                    Text("Debug")
+                }
+                .padding(8)
+                .background(Color.red.opacity(0.8))
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                .padding()
             }
+            #endif
         }
     }
 }
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .environmentObject(AuthService.shared)
 }

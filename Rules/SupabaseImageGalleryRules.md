@@ -97,3 +97,7 @@ The Supabase table should include the following fields:
 3. Optimize for performance with lazy loading and caching
 4. Follow Swift best practices and coding standards
 5. Ensure responsive design for different device sizes 
+
+## Supabase credentials
+supabase Url = "https://bidgqmzbwzoeifenmixm.supabase.co/"
+supabase Key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJpZGdxbXpid3pvZWlmZW5taXhtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIwMzc1NzUsImV4cCI6MjA1NzYxMzU3NX0.1xXs_3JX9AiEYbxZT3y_1lURONv6AEyKqls_XmLLyV0"

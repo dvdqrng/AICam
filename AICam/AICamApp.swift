@@ -10,6 +10,8 @@ import SwiftData
 
 @main
 struct AICamApp: App {
+    @State private var showTestView = true
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
@@ -26,8 +28,30 @@ struct AICamApp: App {
 
     var body: some Scene {
         WindowGroup {
-            NavigationView {
-                ImageGalleryView()
+            if showTestView {
+                // Show the integration test view first to check Supabase SDK integration
+                SupabaseIntegrationTest()
+                    .onDisappear {
+                        showTestView = false
+                    }
+                    .overlay(
+                        VStack {
+                            Spacer()
+                            Button("Continue to Main App") {
+                                showTestView = false
+                            }
+                            .padding()
+                            .background(Color.secondary)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .padding(.bottom, 40)
+                        }
+                    )
+            } else {
+                // Show the main app view
+                NavigationView {
+                    ImageGalleryView()
+                }
             }
         }
         .modelContainer(sharedModelContainer)

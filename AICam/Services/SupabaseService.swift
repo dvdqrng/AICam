@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import UIKit
 
 /// Service responsible for handling all Supabase API interactions
 class SupabaseService {
@@ -79,102 +78,6 @@ class SupabaseService {
                         metadata: response.metadata
                     )
                 }
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    /// Uploads an image to Supabase Storage and creates a record in the images table
-    /// - Parameters:
-    ///   - image: The UIImage to upload
-    ///   - photoDate: The date the photo was taken
-    ///   - metadata: Additional metadata for the image
-    /// - Returns: A publisher that emits the uploaded ImageModel or an error
-    func uploadImage(image: UIImage, photoDate: Date, metadata: [String: String]? = nil) -> AnyPublisher<ImageModel, Error> {
-        guard let imageData = image.jpegData(compressionQuality: 0.8) else {
-            return Fail(error: NSError(domain: "SupabaseService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to convert image to data"]))
-                .eraseToAnyPublisher()
-        }
-        
-        // Generate a unique filename
-        let filename = UUID().uuidString + ".jpg"
-        let storageUrl = "\(supabaseUrl)/storage/v1/object/images/\(filename)"
-        
-        // Create upload request
-        guard let uploadUrl = URL(string: storageUrl) else {
-            return Fail(error: NSError(domain: "SupabaseService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid storage URL"]))
-                .eraseToAnyPublisher()
-        }
-        
-        var request = URLRequest(url: uploadUrl)
-        request.httpMethod = "POST"
-        request.addValue(supabaseKey, forHTTPHeaderField: "apikey")
-        request.addValue("Bearer \(supabaseKey)", forHTTPHeaderField: "Authorization")
-        request.addValue("image/jpeg", forHTTPHeaderField: "Content-Type")
-        request.httpBody = imageData
-        
-        // Upload the image to Supabase Storage
-        return session.dataTaskPublisher(for: request)
-            .tryMap { data, response -> URL in
-                guard let httpResponse = response as? HTTPURLResponse,
-                      (200...299).contains(httpResponse.statusCode) else {
-                    throw NSError(domain: "SupabaseService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to upload image to storage"])
-                }
-                
-                // Return the public URL for the image
-                return URL(string: "\(self.supabaseUrl)/storage/v1/object/public/images/\(filename)")!
-            }
-            .flatMap { imageUrl -> AnyPublisher<ImageModel, Error> in
-                // Now create a record in the images table
-                let imageRecord = [
-                    "url": imageUrl.absoluteString,
-                    "photo_date": ISO8601DateFormatter().string(from: photoDate),
-                    "metadata": metadata ?? [:]
-                ] as [String: Any]
-                
-                // Convert the record to JSON data
-                guard let jsonData = try? JSONSerialization.data(withJSONObject: imageRecord) else {
-                    return Fail(error: NSError(domain: "SupabaseService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to serialize image record"]))
-                        .eraseToAnyPublisher()
-                }
-                
-                // Create the database insert request
-                guard let dbUrl = URL(string: "\(self.supabaseUrl)/rest/v1/images") else {
-                    return Fail(error: NSError(domain: "SupabaseService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid database URL"]))
-                        .eraseToAnyPublisher()
-                }
-                
-                var dbRequest = URLRequest(url: dbUrl)
-                dbRequest.httpMethod = "POST"
-                dbRequest.addValue(self.supabaseKey, forHTTPHeaderField: "apikey")
-                dbRequest.addValue("Bearer \(self.supabaseKey)", forHTTPHeaderField: "Authorization")
-                dbRequest.addValue("application/json", forHTTPHeaderField: "Content-Type")
-                dbRequest.addValue("return=representation", forHTTPHeaderField: "Prefer")
-                dbRequest.httpBody = jsonData
-                
-                // Insert the record into the database
-                return self.session.dataTaskPublisher(for: dbRequest)
-                    .tryMap { data, response -> Data in
-                        guard let httpResponse = response as? HTTPURLResponse,
-                              (200...299).contains(httpResponse.statusCode) else {
-                            throw NSError(domain: "SupabaseService", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to insert image record into database"])
-                        }
-                        return data
-                    }
-                    .decode(type: [SupabaseImageResponse].self, decoder: JSONDecoder())
-                    .map { responses -> ImageModel in
-                        let response = responses[0]
-                        let photoDate = ISO8601DateFormatter().date(from: response.photo_date ?? "") ?? Date()
-                        let createdAt = ISO8601DateFormatter().date(from: response.created_at ?? "") ?? Date()
-                        
-                        return ImageModel(
-                            id: response.id,
-                            imageUrl: response.url,
-                            photoDate: photoDate,
-                            createdAt: createdAt,
-                            metadata: response.metadata
-                        )
-                    }
-                    .eraseToAnyPublisher()
             }
             .eraseToAnyPublisher()
     }

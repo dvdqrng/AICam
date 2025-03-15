@@ -24,28 +24,6 @@ struct ContentView: View {
             }
         }
         .animation(.default, value: authService.currentUser != nil)
-        // Add a debug button for network troubleshooting (optional)
-        .overlay(alignment: .bottomTrailing) {
-            #if DEBUG
-            Button(action: {
-                let networkDebugView = UIHostingController(rootView: NetworkDebugView())
-                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                   let rootViewController = windowScene.windows.first?.rootViewController {
-                    rootViewController.present(networkDebugView, animated: true)
-                }
-            }) {
-                HStack {
-                    Image(systemName: "network")
-                    Text("Debug")
-                }
-                .padding(8)
-                .background(Color.red.opacity(0.8))
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                .padding()
-            }
-            #endif
-        }
     }
 }
 

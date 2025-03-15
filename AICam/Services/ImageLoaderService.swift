@@ -53,29 +53,41 @@ class ImageLoaderService: ObservableObject {
     
     /// Loads the image from the URL or cache
     private func loadImage() {
+        let cacheKey = url.absoluteString as NSString
+        
         // Check if the image is already in the cache
-        if let cachedImage = Self.imageCache.object(forKey: url.absoluteString as NSString) {
+        if let cachedImage = Self.imageCache.object(forKey: cacheKey) {
+            print("Using cached image for: \(url.absoluteString)")
             self.image = cachedImage
             return
         }
         
         isLoading = true
         loadingError = nil
+        print("Loading image from URL: \(url.absoluteString)")
         
         cancellable = URLSession.shared.dataTaskPublisher(for: url)
-            .map { UIImage(data: $0.data) }
+            .map { data, response -> UIImage? in
+                print("Received response for URL: \(self.url.absoluteString) - status: \((response as? HTTPURLResponse)?.statusCode ?? 0)")
+                return UIImage(data: data)
+            }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
                 self?.isLoading = false
                 
                 if case .failure(let error) = completion {
+                    print("Error loading image: \(error.localizedDescription)")
                     self?.loadingError = error
                 }
             } receiveValue: { [weak self] loadedImage in
-                guard let self = self, let image = loadedImage else { return }
+                guard let self = self, let image = loadedImage else { 
+                    print("Failed to create image from data for URL: \(self?.url.absoluteString ?? "unknown")")
+                    return 
+                }
                 
                 // Cache the image
-                Self.imageCache.setObject(image, forKey: self.url.absoluteString as NSString)
+                print("Successfully loaded image for URL: \(self.url.absoluteString)")
+                Self.imageCache.setObject(image, forKey: cacheKey)
                 self.image = image
             }
     }
@@ -83,6 +95,12 @@ class ImageLoaderService: ObservableObject {
     /// Cancels the loading task
     func cancel() {
         cancellable?.cancel()
+    }
+    
+    /// Clears the image cache
+    static func clearCache() {
+        print("Clearing image cache")
+        imageCache.removeAllObjects()
     }
 }
 

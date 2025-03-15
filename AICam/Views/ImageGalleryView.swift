@@ -74,10 +74,22 @@ struct ImageGalleryView: View {
                                     .foregroundColor(.gray)
                                     .padding(.bottom, 2)
                                 
-                                RemoteImage(url: url)
-                                    .aspectRatio(contentMode: .fit)
-                                    .transition(.opacity)
-                                    .animation(.easeInOut, value: viewModel.selectedImageIndex)
+                                // Force clear cache and create new view with a unique ID when image changes
+                                ZStack {
+                                    // Using a key path that includes the URL forces SwiftUI to treat this as a new view
+                                    // when the URL changes
+                                    let _ = print("Creating image view with key: \(url.absoluteString)")
+                                    
+                                    RemoteImage(url: url)
+                                        .id(url.absoluteString) // Use the URL string as ID instead of just the image ID
+                                        .aspectRatio(contentMode: .fit)
+                                }
+                                .transition(.opacity)
+                                .animation(.easeInOut, value: viewModel.selectedImageIndex)
+                            }
+                            .onAppear {
+                                // Log to verify which image we're viewing
+                                print("Displaying image with ID: \(currentImage.id), URL: \(cleanUrlString)")
                             }
                         } else {
                             VStack {
@@ -102,6 +114,8 @@ struct ImageGalleryView: View {
                     Slider(value: Binding(
                         get: { Double(viewModel.selectedImageIndex) },
                         set: { newValue in
+                            // Clear cache before changing index
+                            ImageLoaderService.clearCache()
                             viewModel.selectedImageIndex = Int(newValue.rounded())
                             viewModel.loadMoreImagesIfNeeded(currentIndex: viewModel.selectedImageIndex)
                         }
@@ -111,6 +125,8 @@ struct ImageGalleryView: View {
                     HStack {
                         Button(action: {
                             withAnimation {
+                                // Clear cache before changing index
+                                ImageLoaderService.clearCache()
                                 viewModel.selectedImageIndex = max(0, viewModel.selectedImageIndex - 1)
                             }
                         }) {
@@ -129,6 +145,8 @@ struct ImageGalleryView: View {
                         
                         Button(action: {
                             withAnimation {
+                                // Clear cache before changing index
+                                ImageLoaderService.clearCache()
                                 viewModel.selectedImageIndex = min(viewModel.images.count - 1, viewModel.selectedImageIndex + 1)
                                 viewModel.loadMoreImagesIfNeeded(currentIndex: viewModel.selectedImageIndex)
                             }

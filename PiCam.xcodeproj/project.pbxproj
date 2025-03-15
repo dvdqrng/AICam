@@ -316,7 +316,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AICam/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "AI Cam";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pi Cam";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSCameraUsageDescription = "AICam needs access to your camera to take photos and upload them to your gallery.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "AICam needs access to your photo library to save and access your photos.";
@@ -355,7 +355,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AICam/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "AI Cam";
+				INFOPLIST_KEY_CFBundleDisplayName = "Pi Cam";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
 				INFOPLIST_KEY_NSCameraUsageDescription = "AICam needs access to your camera to take photos and upload them to your gallery.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "AICam needs access to your photo library to save and access your photos.";

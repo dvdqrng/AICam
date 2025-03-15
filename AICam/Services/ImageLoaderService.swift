@@ -109,7 +109,7 @@ struct RemoteImage: View {
         let cleanUrlString = urlString
             .replacingOccurrences(of: "//storage", with: "/storage") // Fix double slashes
             .trimmingCharacters(in: CharacterSet(charactersIn: "?")) // Remove trailing ?
-            
+        
         guard let url = URL(string: cleanUrlString) else { return nil }
         self.init(url: url, placeholder: placeholder)
     }
